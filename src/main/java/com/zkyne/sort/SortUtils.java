@@ -71,6 +71,26 @@ public class SortUtils {
     }
 
     /**
+     * 插入排序(节选自Arrays.sort方法内部实现)
+     *
+     * @param arr
+     * @param left
+     * @param right
+     */
+    public static void insertSort(int[] arr, int left, int right) {
+        rangeCheck(arr.length, left, right);
+        for (int i = left, j = i; i < right; j = ++i) {
+            int temp = arr[i + 1];
+            while (temp < arr[j]) {
+                arr[j + 1] = arr[j];
+                if (j-- == left) break;
+            }
+            arr[j + 1] = temp;
+        }
+    }
+
+
+    /**
      * 希尔排序
      *
      * @param arr
@@ -101,9 +121,18 @@ public class SortUtils {
      *
      * @param arr
      */
+    public static void mergeSort(int[] arr) {
+        mergeSort(arr, 0, arr.length - 1);
+    }
+
+    /**
+     * 合并排序
+     *
+     * @param arr
+     */
     public static void mergeSort(int[] arr, int lo, int hi) {
-        if (lo >= hi) return; //如果下标大于上标，则返回
-        int mid = lo + (hi - lo) / 2;//平分数组
+        if (lo >= hi) return;
+        int mid = lo + ((hi - lo) >>> 1);//平分数组
         // 递归对左侧元素进行排序
         mergeSort(arr, lo, mid);
         // 递归对右侧元素进行排序
@@ -112,6 +141,14 @@ public class SortUtils {
         if (arr[mid] <= arr[mid + 1]) return;
         // 对左右排序好的进行合并
         merge(arr, lo, mid, hi);//对左右排好的序列进行合并
+    }
+
+    /**
+     * 快速排序
+     * @param arr
+     */
+    public static void swiftSort(int[] arr) {
+        swiftSort(arr, 0, arr.length - 1);
     }
 
     /**
@@ -128,7 +165,7 @@ public class SortUtils {
             return;
         }
         // 采用三平均分区法查找中间数
-        int mid = MedianOf3(arr, lo, lo + (hi - lo) / 2, hi);
+        int mid = MedianOf3(arr, lo, lo + ((hi - lo) >>> 1), hi);
         swap(arr, lo, mid);
         //划分，划分完成之后，分为左右序列，左边所有元素小于arr[index]，右边所有元素大于arr[index]
         int index = partition(arr, lo, hi);
@@ -226,11 +263,32 @@ public class SortUtils {
         arr[i] = arr[i] - arr[j];
     }
 
+    /**
+     * 校验数组是否越界
+     *
+     * @param arrayLength
+     * @param fromIndex
+     * @param toIndex
+     */
+    private static void rangeCheck(int arrayLength, int fromIndex, int toIndex) {
+        if (fromIndex > toIndex) {
+            throw new IllegalArgumentException(
+                    "fromIndex(" + fromIndex + ") > toIndex(" + toIndex + ")");
+        }
+        if (fromIndex < 0) {
+            throw new ArrayIndexOutOfBoundsException(fromIndex);
+        }
+        if (toIndex >= arrayLength) {
+            throw new ArrayIndexOutOfBoundsException(toIndex);
+        }
+    }
+
     public static void main(String[] args) {
-        int[] arr = new int[]{3, 4, 5, 2, 1, 2};
+        int[] arr = new int[]{5, 3, 4, 2, 1, 2};
 //        hillSort(arr);
 //        mergeSort(arr, 0, arr.length - 1);
-        swiftSort(arr, 0, arr.length - 1);
+//        swiftSort(arr, 0, arr.length - 1);
+//        insertSort(arr);
         print(arr);
     }
 }
